@@ -1,1 +1,3 @@
 # LeetCode
+
+Answers for LeetCode.
