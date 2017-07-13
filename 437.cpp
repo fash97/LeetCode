@@ -13,21 +13,11 @@ class Solution {
   public:
     int pathSum(TreeNode* root, int sum) {
       if(root == NULL)    return 0;
-      find(root, sum);
-      return total;
+      return find(root, 0, sum) + pathSum(root->left, sum) + pathSum(root->right, sum);
     }
 
-    void find(TreeNode* root, int sum){
-      if(root==NULL)  return;
-      pathSum(root, 0, sum);
-      find(root->left, sum);
-      find(root->right, sum);
-    }
-
-    void pathSum(TreeNode* root, int tillnow, int sum){
-      if(root == NULL)    return;
-      if(tillnow + root->val == sum)  total++;
-      pathSum(root->left, tillnow+root->val, sum);
-      pathSum(root->right, tillnow+root->val, sum);
+    int find(TreeNode* root, int till, int sum){
+      if(root == NULL)    return 0;
+      return (till + root->val == sum) + find(root->left, till+root->val, sum) + find(root->right, till+root->val, sum);
     }
 };
