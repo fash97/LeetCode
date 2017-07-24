@@ -1,13 +1,25 @@
 class Solution {
   public:
     int lengthOfLongestSubstring(string s) {
-      int maximum = 0;
+      if(s.empty())   return 0;
       vector<int> map(256, -1);
-      for(int i=0, j=0; i<s.length(); i++){
-        if(map[s[i]] != -1) j = max(j, map[s[i]]+1);
-        map[s[i]] = i;
-        maximum = max(i-j+1, maximum);
+      int start = 0, end = 0, longest = INT_MIN;
+      while(start < s.length() && end < s.length()){
+        if(map[s[end]] != -1 && map[s[end]] >= start){
+          cout << "start: " << start << endl;
+          cout << "end: " << end << endl;
+          longest = max(longest, end-start);
+          start = map[s[end]] + 1;
+          map[s[end]] = end;
+        }
+        else if(map[s[end]] != -1 && map[s[end]] < start){
+          map[s[end]] = end;
+        }
+        else{
+          map[s[end]] = end;
+        }
+        end++;
       }
-      return maximum;
+      return max(longest, end-start);
     }
 };
