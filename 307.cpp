@@ -82,7 +82,7 @@ public class SegmentTreeMinimumRangeQuery {
     return rangeMinimumQueryLazy(segmentTree, lazy, qlow, qhigh, 0, len - 1, 0);
   }
 
-  private void constructMinSegmentTree(int segmentTree[], vector<int> input, int low, int high,int pos){
+  private void constructMinSegmentTree(vector<int> segmentTree, vector<int> input, int low, int high,int pos){
     if(low == high){
       segmentTree[pos] = input[low];
       return;
@@ -90,10 +90,10 @@ public class SegmentTreeMinimumRangeQuery {
     int mid = (low + high)/2;
     constructMinSegmentTree(segmentTree, input, low, mid, 2 * pos + 1);
     constructMinSegmentTree(segmentTree, input, mid + 1, high, 2 * pos + 2);
-    segmentTree[pos] = Math.min(segmentTree[2*pos+1], segmentTree[2*pos+2]);
+    segmentTree[pos] = min(segmentTree[2*pos+1], segmentTree[2*pos+2]);
   }
 
-  private void updateSegmentTree(int segmentTree[], int index, int delta, int low, int high, int pos){
+  private void updateSegmentTree(vector<int> segmentTree, int index, int delta, int low, int high, int pos){
 
     //if index to be updated is less than low or higher than high just return.
     if(index < low || index > high){
@@ -112,10 +112,10 @@ public class SegmentTreeMinimumRangeQuery {
     int mid = (low + high)/2;
     updateSegmentTree(segmentTree, index, delta, low, mid, 2 * pos + 1);
     updateSegmentTree(segmentTree, index, delta, mid + 1, high, 2 * pos + 2);
-    segmentTree[pos] = Math.min(segmentTree[2*pos+1], segmentTree[2*pos + 2]);
+    segmentTree[pos] = min(segmentTree[2*pos+1], segmentTree[2*pos + 2]);
   }
 
-  private void updateSegmentTreeRange(int segmentTree[], int startRange, int endRange, int delta, int low, int high, int pos) {
+  private void updateSegmentTreeRange(vector<int> segmentTree, int startRange, int endRange, int delta, int low, int high, int pos) {
     if(low > high || startRange > high || endRange < low ) {
       return;
     }
@@ -131,7 +131,7 @@ public class SegmentTreeMinimumRangeQuery {
     segmentTree[pos] = Math.min(segmentTree[2*pos+1], segmentTree[2*pos+2]);
   }
 
-  private int rangeMinimumQuery(int segmentTree[],int low,int high,int qlow,int qhigh,int pos){
+  private int rangeMinimumQuery(vector<int> segmentTree,int low,int high,int qlow,int qhigh,int pos){
     if(qlow <= low && qhigh >= high){
       return segmentTree[pos];
     }
@@ -143,7 +143,7 @@ public class SegmentTreeMinimumRangeQuery {
         rangeMinimumQuery(segmentTree, mid + 1, high, qlow, qhigh, 2 * pos + 2));
   }
 
-  private void updateSegmentTreeRangeLazy(int segmentTree[],
+  private void updateSegmentTreeRangeLazy(vector<int> segmentTree,
       int lazy[], int startRange, int endRange,
       int delta, int low, int high, int pos) {
     if(low > high) {
