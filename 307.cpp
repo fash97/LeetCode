@@ -128,7 +128,7 @@ public class SegmentTreeMinimumRangeQuery {
     int middle = (low + high)/2;
     updateSegmentTreeRange(segmentTree, startRange, endRange, delta, low, middle, 2 * pos + 1);
     updateSegmentTreeRange(segmentTree, startRange, endRange, delta, middle + 1, high, 2 * pos + 2);
-    segmentTree[pos] = Math.min(segmentTree[2*pos+1], segmentTree[2*pos+2]);
+    segmentTree[pos] = min(segmentTree[2*pos+1], segmentTree[2*pos+2]);
   }
 
   private int rangeMinimumQuery(vector<int> segmentTree,int low,int high,int qlow,int qhigh,int pos){
@@ -136,7 +136,7 @@ public class SegmentTreeMinimumRangeQuery {
       return segmentTree[pos];
     }
     if(qlow > high || qhigh < low){
-      return Integer.MAX_VALUE;
+      return INT_MAX;
     }
     int mid = (low+high)/2;
     return Math.min(rangeMinimumQuery(segmentTree, low, mid, qlow, qhigh, 2 * pos + 1),
@@ -144,7 +144,7 @@ public class SegmentTreeMinimumRangeQuery {
   }
 
   private void updateSegmentTreeRangeLazy(vector<int> segmentTree,
-      int lazy[], int startRange, int endRange,
+      vector<int> lazy, int startRange, int endRange,
       int delta, int low, int high, int pos) {
     if(low > high) {
       return;
@@ -185,11 +185,11 @@ public class SegmentTreeMinimumRangeQuery {
     segmentTree[pos] = Math.min(segmentTree[2*pos + 1], segmentTree[2*pos + 2]);
   }
 
-  private int rangeMinimumQueryLazy(int segmentTree[], int lazy[], int qlow, int qhigh,
+  private int rangeMinimumQueryLazy(vector<int> segmentTree, vector<int> lazy, int qlow, int qhigh,
       int low, int high, int pos) {
 
     if(low > high) {
-      return Integer.MAX_VALUE;
+      return I;
     }
 
     //make sure all propagation is done at pos. If not update tree
@@ -205,7 +205,7 @@ public class SegmentTreeMinimumRangeQuery {
 
     //no overlap
     if(qlow > high || qhigh < low){
-      return Integer.MAX_VALUE;
+      return INT_MAX;
     }
 
     //total overlap
@@ -215,7 +215,7 @@ public class SegmentTreeMinimumRangeQuery {
 
     //partial overlap
     int mid = (low+high)/2;
-    return Math.min(rangeMinimumQueryLazy(segmentTree, lazy, qlow, qhigh,
+    return min(rangeMinimumQueryLazy(segmentTree, lazy, qlow, qhigh,
           low, mid, 2 * pos + 1),
         rangeMinimumQueryLazy(segmentTree, lazy,  qlow, qhigh,
           mid + 1, high, 2 * pos + 2));
