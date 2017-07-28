@@ -1,65 +1,84 @@
-struct SegmentTreeNode {
-  int start, end, sum;
-  SegmentTreeNode* left;
-  SegmentTreeNode* right;
-  SegmentTreeNode(int a, int b):start(a),end(b),sum(0),left(nullptr),right(nullptr){}
+struct MyTreeNode{
+  int val;
+  int start;
+  int end;
+  MyTreeNode* left;
+  MyTreeNode* right;
+  MyTreeNode(int v, int s, int e): val(v), start(s), end(e), left(nullptr), right(nullptr) {}
 };
 
 class NumArray {
-
   private:
-    SegmentTreeNode* root;
+    MyTreeNode* root;
 
   public:
     NumArray(vector<int> nums) {
-      int n = nums.size();
-      root = buildTree(nums,0,n-1);
+      if(nums.empty())    root == nullptr;
+      else    root = buildTree(nums, root, 0, nums.size()-1);
     }
 
     void update(int i, int val) {
-      modifyTree(i,val,root);
+      if(!root)   return;
+      updateVal(root, i, val);
     }
 
     int sumRange(int i, int j) {
-      return queryTree(i, j, root);
+      if(!root)   return 0;
+      //printTree(root);
+      return findSum(root, i, j);
     }
-    SegmentTreeNode* buildTree(vector<int> &nums, int start, int end) {
-      if(start > end) return nullptr;
-      SegmentTreeNode* root = new SegmentTreeNode(start,end);
-      if(start == end) {
-        root->sum = nums[start];
-        return root;
+
+    MyTreeNode* buildTree(vector<int> nums, MyTreeNode* root, int start, int end){
+      if(start > end){
+        return nullptr;
       }
-      int mid = start + (end - start) / 2;
-      root->left = buildTree(nums,start,mid);
-      root->right = buildTree(nums,mid+1,end);
-      root->sum = root->left->sum + root->right->sum;
+      if(start == end){
+        return new MyTreeNode(nums[start], start, end);
+      }
+      root = new MyTreeNode(0, start, end);
+      int mid = start + (end-start)/2;
+      root->left = buildTree(nums, root->left, start, mid);
+      root->right = buildTree(nums, root->right, mid+1, end);
+      root->val = root->left->val + root->right->val;
       return root;
     }
-    int modifyTree(int i, int val, SegmentTreeNode* root) {
-      if(root == nullptr) return 0;
+
+    void printTree(MyTreeNode* curr){
+      if(curr == nullptr) return;
+      cout << curr->val;
+      cout << "[" ;
+      printTree(curr->left);
+      cout << "," ;
+      printTree(curr->right);
+      cout << "]" ;
+    }
+
+    int updateVal(MyTreeNode* current, int i, int val){
+      int start = current->start;
+      int end = current->end;
+      if(start == i && end == i){
+        int difference = val - current->val;
+        current->val = val;
+        return difference;
+      }
+      else if(start == end)   return 0;
+      int mid = start + (end-start)/2;
       int diff;
-      if(root->start == i && root->end == i) {
-        diff = val - root->sum;
-        root->sum = val;
-        return diff;
-      }
-      int mid = (root->start + root->end) / 2;
-      if(i > mid) {
-        diff = modifyTree(i,val,root->right);
-      } else {
-        diff = modifyTree(i,val,root->left);
-      }
-      root->sum = root->sum + diff;
+      if(i > mid) diff = updateVal(current->right, i, val);
+      else    diff = updateVal(current->left, i, val);
+      current->val += diff;
       return diff;
     }
-    int queryTree(int i, int j, SegmentTreeNode* root) {
-      if(root == nullptr) return 0;
-      if(root->start == i && root->end == j) return root->sum;
-      int mid = (root->start + root->end) / 2;
-      if(i > mid) return queryTree(i,j,root->right);
-      if(j <= mid) return queryTree(i,j,root->left);
-      return queryTree(i,mid,root->left) + queryTree(mid+1,j,root->right);
+
+    int findSum(MyTreeNode* current, int start, int end){
+      if(current == nullptr)  return 0;
+      int curr_s = current->start;
+      int curr_e = current->end;
+      if(curr_s == start && curr_e == end)  return current->val;
+      int mid = curr_s + (curr_e - curr_s)/2;
+      if(end <= mid)  return findSum(current->left, start, end);
+      else if(start > mid)    return findSum(current->right, start, end);
+      else return findSum(current->left, start, mid)+findSum(current->right, mid+1, end);
     }
 };
 
