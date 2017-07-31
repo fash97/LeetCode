@@ -13,8 +13,10 @@ class Solution {
       }
       else{
         for (i = l; i <= r; i++){
+          //Swap
           swap(nums[l], nums[i]);
           helper(result, nums, l+1, r);
+          //Swap back
           swap(nums[l], nums[i]);
         }
       }
