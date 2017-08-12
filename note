@@ -4,6 +4,7 @@
 116. BFS加level判断是否连接，推荐的方法O（1）space，但是十分难想到
 153. rotate array binary search系列题目，无聊
 209. 很屌的做法这道题我是抄的嘻嘻，一种sliding window的做法
+337. recursive解决问题，需要从base case开始分析，整体不难但是naive到想不到
 442. 与448类似，通过数字找到inorder序号并对位于该序号的数字做标记，然后通过是否被标记过来判断是否重复。
 448. 通过数字找到对应序号然后做标记，完成之后再iterate一遍找到未标记的位置，那么就代表没有。
 653. 这道题借鉴了two sum的方法，在hashmap里寻找target-current,找到了就说明sum为target，找不到就继续left and right
